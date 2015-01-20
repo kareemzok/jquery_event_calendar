@@ -1,0 +1,177 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the jquery event calendar module.
+ */
+
+
+
+/**
+ * Jquery_event_calendar_install - hook_install - see api.drupal.org
+ * @author  Kareem zock
+ */ 
+function jquery_event_calendar_install() {
+ // Create a event type if needed.
+  $t = get_t();
+  $type = node_type_get_type('event');
+  if (!$type) {
+    $type = node_type_set_defaults(array(
+      'type' => 'event',
+      'name' => $t('Event'),
+      'base' => 'node_content',
+      'description' => $t('An event content type.'),
+      'locked' => 0,
+      'custom' => 1,
+      'modified' => 1,
+      ));
+    node_type_save($type);
+    node_add_body_field($type);
+       _jquery_event_calendar_add_custom_fields();
+  }
+}
+
+/**
+ *Jquery_event_calendar_schema - hook_schema - see api.drupal.org
+ * @return (array)$schema
+ * @author Kareem zock
+ */
+function jquery_event_calendar_schema() {
+    
+}
+
+/**
+ * Jquery_event_calendar_uninstall - hook_uninstall - api.drupal.org
+ * @author  Kareem zock
+ */
+function jquery_event_calendar_uninstall() {
+    $type = 'event';
+    $sql = 'SELECT nid FROM {node} n WHERE n.type = :type';
+    $result = db_query($sql, array(':type' => $type));
+    $nodeids = array();
+    foreach ($result as $row) {
+        $nodeids[] = $row->nid;
+    }
+    node_delete_multiple($nodeids);
+    _jquery_event_calendar_delete_custom_fields();
+    node_type_delete($type);
+    field_purge_batch(500);
+    
+    
+    // remove variable options 
+      variable_del('event_calendar_eventsLimit');
+      variable_del('event_calendar_txt_noEvents');
+      variable_del('event_calendar_txt_SpecificEvents_prev');
+      variable_del('event_calendar_txt_SpecificEvents_after');
+      variable_del('event_calendar_txt_next');
+      variable_del('event_calendar_txt_prev');
+      variable_del('event_calendar_txt_NextEvents');
+      variable_del('event_calendar_txt_GoToEventUrl');
+      variable_del('event_calendar_showDayAsWeeks');
+      variable_del('event_calendar_startWeekOnMonday');
+      variable_del('event_calendar_showDayNameInCalendar');
+      variable_del('event_calendar_showDescription');
+      variable_del('event_calendar_onlyOneDescription');
+      variable_del('event_calendar_openEventInNewWindow');
+      variable_del('event_calendar_eventsScrollable');
+      variable_del('event_calendar_jsonDateFormat');
+      variable_del('event_calendar_moveSpeed');
+      variable_del('event_calendar_moveOpacity');
+      variable_del('event_calendar_jsonData');
+      variable_del('event_calendar_cacheJson');
+      variable_del('jquery_event_calendar_dateformat');
+
+      
+     $content_type_names = node_type_get_names();
+     foreach ($content_type_names as $type => $name) {
+        variable_del('ct_'.$type);
+     };
+     foreach ($content_type_names as $type => $name) {
+        variable_del('dropdown_date_fields_'.$type);
+     };
+
+
+}
+
+
+function _jquery_event_calendar_installed_fields() {
+    $t = get_t();
+    return array(
+        'field_event_date' => array(
+            'field_name' => 'field_event_date',
+            'label' => $t('Date of the event'),
+            'type' => 'datetime'
+        ),
+        'field_event_link' => array(
+            'field_name' => 'field_event_link',
+            'label' => $t('Link of the event'),
+            'type' => 'text'
+        ),
+       
+    );
+}
+ 
+function _jquery_event_calendar_installed_instances() {
+    $t = get_t();
+    return array(
+        'field_event_date' => array(
+            'field_name' => 'field_event_date',
+            'type' => 'date',
+            'label' => $t('Date of the event'),
+             'required' => TRUE,
+            'widget' => array(
+                'type' => 'date_text'
+            ),
+            'display' => array(
+                'default' => array(
+                    'label' => $t('Date of the event'),
+                    'type' => 'datetime'
+                )
+            )
+        ),
+        'field_event_link' => array(
+            'field_name' => 'field_event_link',
+            'type' => 'text',
+            'label' => $t('Link of the event'),
+             'required' => False,
+            'widget' => array(
+                'type' => 'textfield'
+            ),
+            'display' => array(
+                'default' => array(
+                    'label' => $t('Link of the event'),
+                    'type' => 'text'
+                )
+            )
+        ),  
+    
+    );
+}
+/**
+ *  Add fields 
+ */
+function _jquery_event_calendar_add_custom_fields() {
+    foreach (_jquery_event_calendar_installed_fields() as $field) {
+        field_create_field($field);
+    }
+    foreach (_jquery_event_calendar_installed_instances() as $fieldinstance) {
+        $fieldinstance['entity_type'] = 'node';
+        $fieldinstance['bundle'] = 'event';
+    //    print_r($fieldinstance);
+        field_create_instance($fieldinstance);
+    }
+}
+/**
+ *  Remove  fields 
+ */
+function _jquery_event_calendar_delete_custom_fields() {
+    foreach (array_keys(_jquery_event_calendar_installed_fields()) as $field) {
+        field_delete_field($field);
+    }
+
+    $instances = field_info_instances('node', 'event');
+    foreach ($instances as  $fieldinstance) {
+        field_delete_instance($fieldinstance);
+    }
+}
+

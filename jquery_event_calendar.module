@@ -1,0 +1,223 @@
+<?php
+
+/**
+ * @file
+ * Event node handling, add to calendar, event block and general hooks.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function jquery_event_calendar_menu() {
+
+  $items['admin/config/user-interface/jquery-event-calendar'] = array(
+    'title' => 'Jquery event calendar',
+    'description' => 'Configure your jquery event calendar.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('jquery_event_calendar_option_configuration_form'),
+    'access callback' => 'user_access',
+    'access arguments' => array('administer jquery calendar'),
+    'file' => 'file/jquery_event_calendar_settings.admin.inc',
+     'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function jquery_event_calendar_permission() {
+    return array(
+        'administer jquery calendar' => array(
+            'title' => t('Access content of jquery event calendar  module.'),
+        )
+    );
+}
+
+/**
+ * Implements hook_help.
+ *
+ * Displays help and module information.
+     * 
+     * @param path 
+ *   Which path of the site we're using to display help
+ * @param arg 
+ *   Array that holds the current path as returned from arg() function
+ */
+function jquery_event_calendar_help($path, $arg) {
+    switch ($path) {
+        case "admin/help#jquery_event_calendar":
+            return '<p>' . t("This module provides jquery_event_calendar services for public visitors .") . '</p>';
+            break;
+    }
+}
+
+/**
+ * Implements hook_block_info().
+ * *
+ * @return void
+ * @author  Kareem zock
+ */
+function jquery_event_calendar_block_info() {
+    $blocks['event-calendar'] = array(
+        'info' => t('Event Calendar'),
+        'cache' => DRUPAL_NO_CACHE,
+    );
+    return $blocks;
+}
+
+/**
+ * Create the block
+ * @param type $delta
+ * @return type
+ */
+function jquery_event_calendar_block_view($delta = '') {
+    $block = array();
+    switch ($delta) {
+        case 'event-calendar':
+            module_load_include('inc', 'jquery_event_calendar', 'file/jquery_event_calendar.file');
+          $service_form = drupal_get_form('jquery_event_calendar_services_form');
+            $service_form['#theme'] = array('jquery_event_calendar_services_form');
+            $block['subject'] = t('Event Calendar');
+            $block['content'] =$service_form;
+            break;
+    }
+    return $block;
+}
+/**
+ * Implements hook_node_info()
+ */
+function jquery_event_calendar_node_info() {
+    return array(
+        'event' => array(
+            'name' => t('Event'),
+            'base' => 'event',
+            'description' => t('Create event to post it in calendar'),
+            'has_title' => TRUE,
+            'title_label' => t('Event title')
+         )
+    );
+}
+
+/**
+ * Implements hook_library().
+ */
+function jquery_event_calendar_library() {
+  $library = libraries_get_path('jquery-event-calendar');
+
+  $libraries['jquery-event-calendar'] = array(
+    'title' => 'Jquery event calendar',
+    'website' => 'http://www.vissit.com/jquery-event-calendar-plugin-english-version/',
+    'version' => array(),
+    'js' => array(
+      $library . '/jquery.eventCalendar.min.js' => array(
+        'scope' => 'footer',
+      ),
+        $library . '/moment.js' => array(
+        'scope' => 'footer',
+      ),
+    ),
+    'css' => array(
+      $library . '/eventCalendar.css' => array(
+        'type' => 'file',
+        'media' => 'screen',
+      ),
+      $library . '/eventCalendar_theme_responsive.css' => array(
+        'type' => 'file',
+        'media' => 'screen',
+      ),
+    ),
+  );
+
+  return $libraries;
+}
+
+
+/**
+ * Implements hook_libraries_info().
+ */
+function jquery_event_calendar_libraries_info() {
+  $libraries['jquery_event_calendar'] = array(
+    'name' => 'Jquery event calendar plugin',
+    'vendor url' => 'http://www.vissit.com/jquery-event-calendar-plugin-english-version/',
+    'download url' => 'https://github.com/jaime8111/jQueryEventCalendar',
+    'files' => array(
+      'js' => array(
+        'jquery.eventCalendar.min.js',
+            'moment.js',
+      ),
+      'css' => array(
+        'eventCalendar.css',
+         'eventCalendar_theme_responsive.css'
+      ),
+    ),
+    'variants' => array(
+      'minified' => array(
+        'files' => array(
+          'js' => array(
+            'jquery.eventCalendar.min.js',
+               'moment.js',
+          ),
+         'css' => array(
+           'eventCalendar.css',
+          'eventCalendar_theme_responsive.css'
+         ),
+        ),
+      ),
+      'source' => array(
+        'files' => array(
+          'js' => array(
+            'jquery.jquery.eventCalendar.min.js',
+               'moment.js',
+          ),
+          'css' => array(
+        'eventCalendar.css',
+         'eventCalendar_theme_responsive.css'
+           ),
+        ),
+      ),
+    ),
+  );
+
+  return $libraries;
+}
+
+/**
+ * Implement hook_form()
+ */
+function jquery_event_calendar_form($node, $form_state) {
+    return node_content_form($node, $form_state);
+}
+
+
+/**
+ * Implements hook_requirements().
+ */
+function jquery_event_calendar_requirements($phase) {
+   $requirements = array();
+  // Ensure translations do not break at install time
+  $t = get_t();
+
+  $requirements['jquery-event-calendar'] = array(
+    'title' => $t('Jquery event calendar library'),
+  );
+
+  $libraries = libraries_get_libraries();
+
+  if (isset($libraries['jquery-event-calendar'])) {
+    $requirements['jquery-event-calendar']['value'] = $t('Installed');
+    $requirements['jquery-event-calendar']['severity'] = REQUIREMENT_OK;
+  }
+  else {
+    $requirements['jquery-event-calendar']['value'] = $t('Not Installed');
+    $requirements['jquery-event-calendar']['severity'] = REQUIREMENT_ERROR;
+    $url ="https://github.com/jaime8111/jQueryEventCalendar";   
+    $description = $t('Please install the <a href='.$url.' target="_blank" > library </a> as described in readme file ');
+
+    $requirements['jquery-event-calendar']['description'] = $description; 
+
+  }
+
+  return $requirements;
+
+}

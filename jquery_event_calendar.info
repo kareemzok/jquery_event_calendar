@@ -1,0 +1,13 @@
+ 
+name = Jquery Event Calendar
+description = Manage content in calendar 
+core = 7.x
+
+dependencies[] = libraries
+dependencies[] = date
+configure = admin/config/user-interface/jquery-event-calendar
+
+version = "7.x-1.0"
+core = "7.x"
+project = "eventcalendar"
+datestamp = "1277159711"    
