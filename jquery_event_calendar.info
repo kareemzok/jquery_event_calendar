@@ -5,6 +5,8 @@ core = 7.x
 
 dependencies[] = libraries
 dependencies[] = date
+dependencies[] = jquery_update
+
 configure = admin/config/user-interface/jquery-event-calendar
 
 version = "7.x-1.0"

@@ -13,6 +13,8 @@ Drupal 7.x
 This module requires the following contrib module :
  *  Date (https://www.drupal.org/project/date)
  *  libraries (https://www.drupal.org/project/libraries)
+ *  jQuery Update (https://www.drupal.org/project/jquery_update)
+
 
 
 INSTALLATION
@@ -27,6 +29,8 @@ INSTALLATION
     sites/all/libraries/jquery-event-calendar/jquery.eventCalendar.min.js
  *  You may need to wrap jquery.eventCalendar.min.js with (function ($) { ....... }(jQuery)); 
     if you got the following error : Cannot read property 'fn' of undefined
+
+
 
 
 CONFIGURATION
