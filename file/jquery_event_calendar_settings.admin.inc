@@ -104,7 +104,7 @@ function jquery_event_calendar_option_configuration_form($form, &$form_state) {
             1 => t('True'),
         ),
         '#default_value' => variable_get('jquery_event_calendar_showDayNameInCalendar', 1),
-        '#description' => t('Hide the day names in the calendar view.'),
+        '#description' => t('Show the day names in the calendar view.'),
     );
     $form['config']['jquery_event_calendar_showDescription'] = array(
         '#type' => 'select',
@@ -128,13 +128,13 @@ function jquery_event_calendar_option_configuration_form($form, &$form_state) {
     );
     $form['config']['jquery_event_calendar_openEventInNewWindow'] = array(
         '#type' => 'select',
-        '#title' => t('Open event in new window'),
+        '#title' => t('Open links in new window'),
         '#options' => array(
             0 => t('False'),
             1 => t('True'),
         ),
         '#default_value' => variable_get('jquery_event_calendar_openEventInNewWindow', 1),
-        '#description' => t('Open event link in a new window.'),
+        '#description' => t('Open links in a new window.'),
     );
     $form['config']['jquery_event_calendar_eventsScrollable'] = array(
         '#type' => 'select',
