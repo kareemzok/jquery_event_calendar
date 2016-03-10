@@ -27,6 +27,7 @@ INSTALLATION
     sites/all/libraries/jquery-event-calendar/eventCalendar.css
     sites/all/libraries/jquery-event-calendar/eventCalendar_theme_responsive.css
     sites/all/libraries/jquery-event-calendar/jquery.eventCalendar.min.js
+	sites/all/libraries/jquery-event-calendar/moment.js
  *  You may need to wrap jquery.eventCalendar.min.js with (function ($) { ....... }(jQuery)); 
     if you got the following error : Cannot read property 'fn' of undefined
 
