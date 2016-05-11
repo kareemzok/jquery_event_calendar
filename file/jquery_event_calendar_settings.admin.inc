@@ -26,6 +26,7 @@ function jquery_event_calendar_option_configuration_form($form, &$form_state) {
     );
     $form['general']['libpath']['#markup'] = t('Download Jquery Calendar library from: <a href="https://github.com/jaime8111/jQueryEventCalendar" target="_blank">Jquery Calendar Library download</a> then upload to. ' . $jquery_calandar_lib_path);
 
+    /* Content type calendar configuration */
 
     $form['content'] = array(
         '#type' => 'fieldset',
@@ -54,6 +55,8 @@ function jquery_event_calendar_option_configuration_form($form, &$form_state) {
             );
         }
     }
+
+    /* General Calendar configuration */
     $form['config'] = array(
         '#type' => 'fieldset',
         '#title' => t('General Calendar configuration'),
@@ -66,13 +69,12 @@ function jquery_event_calendar_option_configuration_form($form, &$form_state) {
         $date_formats[$value['type']] = t('@date_format format', array('@date_format' => $value['title'])) . ': ' . format_date(REQUEST_TIME, $value['type']);
     }
 
-  
+
     $form['config']['jquery_event_calendar_dateformat'] = array(
         '#type' => 'textfield',
         '#title' => t('Date format'),
         '#description' => t('See the <a href="@url" target="_blank">Moment plugin</a> for date formats.', array('@url' => 'http://momentjs.com/docs/#/displaying/format/')),
         '#default_value' => variable_get('jquery_event_calendar_dateformat', 'dddd MM-D-YYYY'),
-     
     );
 
 
@@ -181,6 +183,8 @@ function jquery_event_calendar_option_configuration_form($form, &$form_state) {
         '#description' => t('Opacity of widget animation.'),
     );
 
+    /* Text/label calendar configuration */
+
     $form['labels'] = array(
         '#type' => 'fieldset',
         '#title' => t('Text/label calendar configuration'),
@@ -239,6 +243,29 @@ function jquery_event_calendar_option_configuration_form($form, &$form_state) {
         '#maxlength' => 30,
         '#size' => 30,
         '#default_value' => variable_get('jquery_event_calendar_txt_GoToEventUrl', 'See the event'),
+    );
+
+    /* theming */
+
+    $form['theme'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Theming'),
+        '#collapsible' => true,
+        '#collapsed' => true,
+    );
+
+    $form['theme']['jquery_event_calendar_template'] = array(
+        '#type' => 'select',
+        '#title' => t('Chose a theme'),
+        '#options' => array(
+            'default' => t('Sky'),
+            'desert' => t('Desert'),
+            'forest' => t('Forest'),
+            'orangy' => t('Orangy'),
+            'pepper' => t('Pepper'),
+        ),
+        '#default_value' => variable_get('jquery_event_calendar_template', 'default'),
+        '#description' => t('The default theme is Sky.'),
     );
 
 

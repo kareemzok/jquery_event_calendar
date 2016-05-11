@@ -5,6 +5,22 @@
  * Event node handling, add to calendar, event block and general hooks.
  */
 
+
+
+/**
+ * Implements hook_init().
+ */
+function jquery_event_calendar_init(){
+  $path = drupal_get_path('module', 'jquery_event_calendar');
+  $theme_name=variable_get('jquery_event_calendar_template');
+
+  if($theme_name!='default')
+      drupal_add_css($path.'/themes/'.$theme_name.'/eventCalendar_theme_responsive.css');
+  
+
+}
+
+
 /**
  * Implements hook_menu().
  */
@@ -220,4 +236,17 @@ function jquery_event_calendar_requirements($phase) {
 
   return $requirements;
 
+}
+
+
+/**
+ * Implements hook_css_alter().
+ */
+
+function jquery_event_calendar_css_alter(&$css) {
+
+  $theme_name=variable_get('jquery_event_calendar_template');
+
+  if($theme_name!='default')
+  unset($css['sites/all/libraries/jquery-event-calendar/eventCalendar_theme_responsive.css']);
 }

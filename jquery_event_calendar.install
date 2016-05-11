@@ -80,7 +80,7 @@ function jquery_event_calendar_uninstall() {
       variable_del('event_calendar_jsonData');
       variable_del('event_calendar_cacheJson');
       variable_del('jquery_event_calendar_dateformat');
-
+      variable_del('jquery_event_calendar_template');
       
      $content_type_names = node_type_get_names();
      foreach ($content_type_names as $type => $name) {

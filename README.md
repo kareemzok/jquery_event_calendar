@@ -15,6 +15,13 @@ This module requires the following contrib module :
  *  libraries (https://www.drupal.org/project/libraries)
  *  jQuery Update (https://www.drupal.org/project/jquery_update)
 
+ 
+FEATURES
+-------------
+ *  Content type options
+ *  General configuration such as date format, links option, cashing, speed and much more.
+ *  Text and label confuguration such as prefix, suffix of the event head date, next and previous buttons, url button and much more.
+ *  Choose between different themes.
 
 
 INSTALLATION
@@ -30,8 +37,6 @@ INSTALLATION
 	sites/all/libraries/jquery-event-calendar/moment.js
  *  You may need to wrap jquery.eventCalendar.min.js with (function ($) { ....... }(jQuery)); 
     if you got the following error : Cannot read property 'fn' of undefined
-
-
 
 
 CONFIGURATION
